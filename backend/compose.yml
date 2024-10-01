@@ -1,0 +1,17 @@
+networks:
+  operand-networking:
+    driver: bridge
+
+services:
+  operand-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${NODE_ENV}
+    container_name: cs-skin-store-app
+    networks:
+      - operand-networking
+    volumes:
+      - .:/app
+    ports:
+      - "${NODE_PORT}:${NODE_PORT}"

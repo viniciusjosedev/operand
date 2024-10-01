@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
+import { UserService } from '../users/user.service';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +23,7 @@ export class AuthService {
       access_token: this.jwtService.sign(payload, {
         algorithm: 'HS256',
         secret: process.env.JWT_SECRET || 'secret',
+        expiresIn: '30d',
       }),
     };
   }

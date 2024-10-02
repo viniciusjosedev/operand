@@ -6,8 +6,8 @@ import { AuthBodyDtoSignIn } from './auth.body.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/singin')
-  async singIn(
+  @Post('/signin')
+  async signIn(
     @Body(
       new ValidationPipe({
         whitelist: true,
@@ -20,8 +20,8 @@ export class AuthController {
     return this.authService.signIn(body.email, body.password);
   }
 
-  @Post('/singup')
-  async singUp(
+  @Post('/signup')
+  async signUp(
     @Body(
       new ValidationPipe({
         whitelist: true,

@@ -6,7 +6,7 @@ import { UserModule } from '../users/user.module';
 import { UserService } from '../users/user.service';
 import { AuthController } from './auth.controller';
 
-const EMAIL_MOCK = 'test@example.com';
+const EMAIL_MOCK = 'test@operand.com';
 const PASSWORD_MOCK = '123456';
 
 describe('AuthService', () => {

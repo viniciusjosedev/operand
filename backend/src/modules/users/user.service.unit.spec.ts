@@ -7,7 +7,7 @@ import {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 
-const EMAIL_MOCK = 'test@example.com';
+const EMAIL_MOCK = 'test@operand.com';
 const UUD_MOCK = '1';
 const PASSWORD_MOCK = '123456';
 

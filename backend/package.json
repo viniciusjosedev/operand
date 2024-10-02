@@ -17,7 +17,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./jest-e2e.config.json",
+    "test:e2e": "NODE_ENV=test && jest --config ./jest-e2e.config.json",
     "logs": "docker compose logs -f operand-app",
     "docker:up": "docker compose up -d --build --force-recreate && npm run logs",
     "docker:down": "docker compose down",

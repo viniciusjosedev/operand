@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { AuthFirebase } from 'src/firebase/auth.firebase';
+import logger from 'src/log/logger';
 
 @Injectable()
 export class UserService {
@@ -47,7 +48,7 @@ export class UserService {
         email: user.user.email,
       };
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       throw new UnauthorizedException('User already exists');
     }
   }

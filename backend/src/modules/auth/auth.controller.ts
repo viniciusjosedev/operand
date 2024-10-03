@@ -3,10 +3,12 @@ import {
   Controller,
   HttpCode,
   Post,
+  Res,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthBodyDtoSignIn } from './auth.body.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +17,8 @@ export class AuthController {
   @Post('/signin')
   @HttpCode(200)
   async signIn(
+    @Res()
+    res: Response,
     @Body(
       new ValidationPipe({
         whitelist: true,
@@ -24,7 +28,18 @@ export class AuthController {
     )
     body: AuthBodyDtoSignIn,
   ) {
-    return this.authService.signIn(body.email, body.password);
+    const accessToken = await this.authService.signIn(
+      body.email,
+      body.password,
+    );
+
+    res.cookie('token', accessToken.access_token, {
+      httpOnly: true,
+      secure: true,
+      expires: new Date(Date.now() + 60 * 60 * 24 * 60 * 1000),
+    });
+
+    return res.json(accessToken);
   }
 
   @Post('/signup')

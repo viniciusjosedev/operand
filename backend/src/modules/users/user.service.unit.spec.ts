@@ -6,10 +6,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
-
-const EMAIL_MOCK = process.env.TEST_EMAIL_MOCK || 'test@operand.com';
-const UUD_MOCK = '1';
-const PASSWORD_MOCK = '123456';
+import { EMAIL_MOCK, PASSWORD_MOCK, UUD_MOCK } from './mocks';
 
 jest.mock('firebase/auth', () => {
   const actualFirebaseAuth = jest.requireActual('firebase/auth');

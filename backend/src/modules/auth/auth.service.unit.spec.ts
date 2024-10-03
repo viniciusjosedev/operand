@@ -5,9 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserModule } from '../users/user.module';
 import { UserService } from '../users/user.service';
 import { AuthController } from './auth.controller';
-
-const EMAIL_MOCK = process.env.TEST_EMAIL_MOCK || 'test@operand.com';
-const PASSWORD_MOCK = '123456';
+import { EMAIL_MOCK, PASSWORD_MOCK } from './mocks';
 
 describe('AuthService', () => {
   let service: AuthService;

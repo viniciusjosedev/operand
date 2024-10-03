@@ -5,25 +5,16 @@ import * as request from 'supertest';
 import { AuthModule } from './auth.module';
 import { deleteUser, signInWithEmailAndPassword, User } from 'firebase/auth';
 import { AuthFirebase } from 'src/firebase/auth.firebase';
+import { EMAIL_MOCK, PASSWORD_MOCK } from './mocks';
 
-const EMAIL_MOCK = process.env.TEST_EMAIL_MOCK || 'test@operand.com';
-const PASSWORD_MOCK = '123456';
+type Credentials = {
+  email: string;
+  password: string;
+};
 
 type AuthFunctionsHelper = {
-  findUser: ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) => Promise<User | null>;
-  deleteUser: ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) => Promise<void>;
+  findUser: ({ email, password }: Credentials) => Promise<User | null>;
+  deleteUser: ({ email, password }: Credentials) => Promise<void>;
 };
 
 describe('AuthRouter (e2e)', () => {

@@ -18,7 +18,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, id: user.id };
     return {
       access_token: this.jwtService.sign(payload, {
         algorithm: 'HS256',

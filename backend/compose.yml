@@ -2,7 +2,23 @@ networks:
   operand-networking:
     driver: bridge
 
+volumes:
+  operand-redis-data:
+
 services:
+  redis:
+    image: redis:7.4
+    container_name: operand-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    networks:
+      - operand-networking
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+    volumes:
+      - operand-redis-data:/data
+
   operand-app:
     build:
       context: .

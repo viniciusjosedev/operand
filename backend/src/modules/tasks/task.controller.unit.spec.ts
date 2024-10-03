@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { DatabaseFirebase } from 'src/firebase/database.firebase';
 import { RedisCache } from 'src/cache/redis';
 import { TASK_MOCK } from './mocks';
+import { Request } from 'express';
 
 describe('TaskController', () => {
   let controller: TaskController;
@@ -50,7 +51,7 @@ describe('TaskController', () => {
       await controller.index(
         {
           user: { id: '1' },
-        },
+        } as unknown as Request,
         {
           pageNumber: '1',
         },
@@ -70,7 +71,7 @@ describe('TaskController', () => {
       await controller.create(
         {
           user: { id: '1' },
-        },
+        } as unknown as Request,
         {
           title: 'title',
           description: 'description',
@@ -92,7 +93,7 @@ describe('TaskController', () => {
       await controller.update(
         {
           user: { id: '1' },
-        },
+        } as unknown as Request,
         {
           id: '1',
           title: 'title',
@@ -116,7 +117,7 @@ describe('TaskController', () => {
       await controller.delete(
         {
           user: { id: '1' },
-        },
+        } as unknown as Request,
         {
           taskId: '1',
         },

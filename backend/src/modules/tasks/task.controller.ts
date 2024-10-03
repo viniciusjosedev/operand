@@ -8,7 +8,7 @@ import {
   Post,
   Put,
   Query,
-  Request,
+  Req,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,6 +19,7 @@ import {
   TaskBodyUpdateDto,
   TaskQueryGetDto,
 } from './task.dto';
+import { Request } from 'express';
 
 @Controller('task')
 @UseGuards(AuthGuard)
@@ -27,7 +28,7 @@ export class TaskController {
 
   @Get('/')
   async index(
-    @Request() req,
+    @Req() req: Request,
     @Query(
       new ValidationPipe({
         forbidNonWhitelisted: true,
@@ -46,7 +47,7 @@ export class TaskController {
   @Post('/create')
   @HttpCode(201)
   async create(
-    @Request() req,
+    @Req() req: Request,
     @Body(
       new ValidationPipe({
         forbidNonWhitelisted: true,
@@ -65,7 +66,7 @@ export class TaskController {
   @Put('/update')
   @HttpCode(200)
   async update(
-    @Request() req,
+    @Req() req: Request,
     @Body(
       new ValidationPipe({
         forbidNonWhitelisted: true,
@@ -84,7 +85,7 @@ export class TaskController {
   @Delete('/delete/:taskId')
   @HttpCode(204)
   async delete(
-    @Request() req,
+    @Req() req: Request,
     @Param()
     param: { taskId: string },
   ) {

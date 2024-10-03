@@ -5,12 +5,21 @@ import { JwtService } from '@nestjs/jwt';
 import { UserModule } from '../users/user.module';
 import { UserService } from '../users/user.service';
 import { AuthController } from './auth.controller';
-import { EMAIL_MOCK, PASSWORD_MOCK } from './mocks';
+import { EMAIL_MOCK, ID_MOCK, PASSWORD_MOCK, TOKEN_MOCK } from './mocks';
+
+const signMock = jest.fn().mockImplementation(() => TOKEN_MOCK);
+
+jest.mock('@nestjs/jwt', () => {
+  return {
+    JwtService: jest.fn().mockImplementation(() => ({
+      sign: signMock,
+    })),
+  };
+});
 
 describe('AuthService', () => {
   let service: AuthService;
   let userService: UserService;
-  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,7 +30,6 @@ describe('AuthService', () => {
 
     service = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   it('should be defined', () => {
@@ -40,31 +48,26 @@ describe('AuthService', () => {
     const userServiceSpy = jest
       .spyOn(userService, 'findOne')
       .mockImplementation(() =>
-        Promise.resolve({ email: EMAIL_MOCK, id: '1' }),
+        Promise.resolve({ email: EMAIL_MOCK, id: ID_MOCK }),
       );
 
-    const jwtServiceSpy = jest
-      .spyOn(jwtService, 'sign')
-      .mockImplementation(() => 'token');
-
     expect(await service.signIn(EMAIL_MOCK, PASSWORD_MOCK)).toEqual({
-      access_token: 'token',
+      access_token: TOKEN_MOCK,
     });
     expect(userServiceSpy).toHaveBeenCalled();
     expect(userServiceSpy).toHaveBeenCalledTimes(1);
-    expect(jwtServiceSpy).toHaveBeenCalled();
-    expect(jwtServiceSpy).toHaveBeenCalledTimes(1);
+    expect(signMock).toHaveBeenCalled();
+    expect(signMock).toHaveBeenCalledTimes(1);
   });
 
   it('should return a value from signUp', async () => {
     const userServiceSpy = jest
       .spyOn(userService, 'create')
       .mockImplementation(() =>
-        Promise.resolve({ email: EMAIL_MOCK, id: '1' }),
+        Promise.resolve({ email: EMAIL_MOCK, id: ID_MOCK }),
       );
 
     expect(await service.signUp(EMAIL_MOCK, PASSWORD_MOCK)).toBeUndefined();
-
     expect(userServiceSpy).toHaveBeenCalled();
     expect(userServiceSpy).toHaveBeenCalledTimes(1);
   });

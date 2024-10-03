@@ -4,6 +4,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserModule } from '../users/user.module';
+import { EMAIL_MOCK, PASSWORD_MOCK, TOKEN_MOCK } from './mocks';
+import { Response } from 'express';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -35,15 +37,21 @@ describe('AuthController', () => {
   it('should return a value from singIn', async () => {
     const authServiceSpy = jest
       .spyOn(authService, 'signIn')
-      .mockImplementation(() => Promise.resolve({ access_token: 'token' }));
+      .mockImplementation(() => Promise.resolve({ access_token: TOKEN_MOCK }));
 
     expect(
-      await controller.signIn({
-        email: 'test@gmail.com',
-        password: '123456',
-      }),
+      await controller.signIn(
+        {
+          cookie: jest.fn(),
+          json: jest.fn().mockReturnValue({ access_token: TOKEN_MOCK }),
+        } as unknown as Response,
+        {
+          email: EMAIL_MOCK,
+          password: PASSWORD_MOCK,
+        },
+      ),
     ).toEqual({
-      access_token: 'token',
+      access_token: TOKEN_MOCK,
     });
 
     expect(authServiceSpy).toHaveBeenCalled();
@@ -57,8 +65,8 @@ describe('AuthController', () => {
 
     expect(
       await controller.signUp({
-        email: 'test@gmail.com',
-        password: '123456',
+        email: EMAIL_MOCK,
+        password: PASSWORD_MOCK,
       }),
     ).toEqual(undefined);
 

@@ -9,7 +9,7 @@ services:
   redis:
     image: redis:7.4
     container_name: operand-redis
-    command: redis-server --requirepass ${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT}
     networks:
       - operand-networking
     ports:

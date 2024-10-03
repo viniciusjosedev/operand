@@ -16,6 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { DatabaseFirebase } from 'src/firebase/database.firebase';
 import { Task } from './task.service.interface';
 import { RedisCache } from 'src/cache/redis';
+import * as cookieParser from 'cookie-parser';
 
 type Credentials = {
   email: string;
@@ -103,6 +104,8 @@ describe('TaskRouter (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.use(cookieParser());
+
     await app.init();
 
     jwtService = moduleFixture.get<JwtService>(JwtService);

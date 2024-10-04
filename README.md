@@ -30,31 +30,45 @@ Para iniciar a aplicação com Docker, certifique-se de que o Docker está insta
 
 2. **Configure suas credenciais:**
 
-    Crie um arquivo `.env` em `/backend` com o seguinte conteúdo para o backend (abaixo é apenas um exemplo, fique à vontade para mudar suas portas):
+    Crie um arquivo `.env` em `/backend` com o seguinte conteúdo para o backend:
 
     ```sh
-    # ENVIRONMENT, DEV OR PROD
-    NODE_ENV=dev
-    NODE_PORT=1010
-
-    # DB CONFIG
-    MONGO_PORT=27017
-    DATABASE_URL="mongodb://cs-skin-store-mongo:27017/skinStore?replicaSet=rs0&retryWrites=true&w=majority&directConnection=true"
-
-    # FRONTEND CONFIG
-    FRONTEND_URL=http://localhost:3000
+    # prod OR dev OR test
+	NODE_ENV=
+	
+	# DEFAULT 8080
+	NODE_PORT=
+	
+	# PLEASE CHANGE THIS
+	JWT_SECRET=
+	FRONTEND_URL=
+	
+	# FIREBASE CONFIG
+	FIREBASE_PROJECT_ID=<project-id>
+	FIREBASE_DATABASE_URL=https://<project-id>.firebaseio.com
+	FIREBASE_APP_KEY=<app-key>
+	
+	# TEST 
+	# (CAN BE SAME AS FIREBASE_DATABASE_URL)
+	TEST_DATABASE_URL=https://<project-id>.firebaseio.com
+	# DEFAULT EMAIL FOR TESTING, BY DEFAULT VALUE IS test@operand.com. THIS EMAIL NOT CAN BE USED IN PRODUCTION BECAUSE ACCOUNT WILL DELETED BEFORE AND AFTER TEST.
+	TEST_EMAIL_MOCK=
+	
+	# REDIS
+	REDIS_HOST=
+	REDIS_PORT=
+	REDIS_PASSWORD=
     ```
 
-    E para o frontend, crie um arquivo `.env` dentro de `/frontend` (abaixo é apenas um exemplo, fique à vontade para mudar suas portas):
+    E para o frontend, crie um arquivo `.env` dentro de `/frontend`:
 
     **OBS:** A porta da URL do backend deve ser a mesma que está configurada na `.env` do `/backend`.
 
     ```sh
-    NODE_ENV=dev
-
-    NEXT_PORT=3000
-
-    NEXT_PUBLIC_BACKEND_URL=http://localhost:1010
+    # URL FOR THE BACKEND API
+	VITE_BACKEND_URL=
+	
+	VITE_PORT=
     ```
 
 3. Com as credenciais feitas, inicie o Docker em ambos os diretórios.
@@ -62,22 +76,15 @@ Para iniciar a aplicação com Docker, certifique-se de que o Docker está insta
     Em um terminal, execute:
     ```sh
     cd frontend
-    npm run up
+    npm run docker:up
     ```
     Em outro terminal, execute:
     ```sh
     cd backend
-    npm run up
+    npm run docker:up
     ```
 
 	OBS: Caso o container do frontend dê algum erro de falta de depêndencias na hora da inicialização do next, execute "npm install" em /frontend e em seguida suba o container novamente com o comando "npm run up".
-
-4. Caso inicie o backend como desenvolvimento (`NODE_ENV=dev`), é necessário rodar os seeds com o Prisma. Para isso, entre no container do backend e rode o comando:
-
-    ```sh
-    docker exec -it cs-skin-store-app sh
-    npm run prisma:seed
-    ```
 
 ## Execução dos Testes
 

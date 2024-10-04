@@ -1,0 +1,17 @@
+networks:
+  service:
+    driver: bridge
+
+services:
+  operand-front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${NODE_ENV}
+    container_name: operand-front
+    networks:
+      - service
+    volumes:
+      - .:/app
+    ports:
+      - "${VITE_PORT}:5173"

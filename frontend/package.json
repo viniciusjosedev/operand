@@ -4,13 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm i && vite --host 0.0.0.0",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+		"start": "npm i && vite --host 0.0.0.0",
+		"logs": "docker compose logs -f operand-front",
+		"docker:up": "docker compose up -d --build --force-recreate && npm run logs",
+		"docker:down": "docker compose down"
   },
   "dependencies": {
     "@primevue/themes": "^4.0.7",

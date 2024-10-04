@@ -24,8 +24,8 @@ Para iniciar a aplicação com Docker, certifique-se de que o Docker está insta
 1. **Clone o repositório:**
 
     ```sh
-    git clone git@github.com:viniciusjosedev/cs-skin-store.git
-    cd cs-skin-store
+    git clone git@github.com:viniciusjosedev/operand.git
+    cd operand
     ```
 
 2. **Configure suas credenciais:**
@@ -84,7 +84,7 @@ Para iniciar a aplicação com Docker, certifique-se de que o Docker está insta
     npm run docker:up
     ```
 
-	OBS: Caso o container do frontend dê algum erro de falta de depêndencias na hora da inicialização do next, execute "npm install" em /frontend e em seguida suba o container novamente com o comando "npm run up".
+	OBS: Caso o container do frontend dê algum erro de falta de depêndencias na hora da inicialização do vite, execute "npm install" em /frontend e em seguida suba o container novamente com o comando "npm run up".
 
 ## Execução dos Testes
 
@@ -95,9 +95,9 @@ Para executar os testes de integração, siga estes passos:
     ```sh
     # TEST 
 	# (CAN BE SAME AS FIREBASE_DATABASE_URL)
-	TEST_DATABASE_URL=https://operand-1a642-default-rtdb.firebaseio.com
+	TEST_DATABASE_URL=
 	# DEFAULT EMAIL FOR TESTING, BY DEFAULT VALUE IS test@operand.com. THIS EMAIL NOT CAN BE USED IN PRODUCTION BECAUSE ACCOUNT WILL DELETED BEFORE AND AFTER TEST.
-	TEST_EMAIL_MOCK=juninho@teste.com
+	TEST_EMAIL_MOCK=
     ```
 
 

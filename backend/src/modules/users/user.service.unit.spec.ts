@@ -5,6 +5,7 @@ import { AuthFirebase } from '../../firebase/auth.firebase';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import { EMAIL_MOCK, PASSWORD_MOCK, UUD_MOCK } from './mocks';
 
@@ -15,6 +16,7 @@ jest.mock('firebase/auth', () => {
     ...actualFirebaseAuth,
     signInWithEmailAndPassword: jest.fn(),
     createUserWithEmailAndPassword: jest.fn(),
+    sendPasswordResetEmail: jest.fn(),
   };
 });
 
@@ -41,6 +43,9 @@ describe('AuthService', () => {
     expect(service.create).toBeDefined();
   });
 
+  it('should have a method resetPassword', () => {
+    expect(service.resetPassword).toBeDefined();
+  });
   it('should return a value from findOne', async () => {
     (signInWithEmailAndPassword as jest.Mock).mockResolvedValue(
       Promise.resolve({ user: { uid: UUD_MOCK, email: EMAIL_MOCK } }),
@@ -67,6 +72,17 @@ describe('AuthService', () => {
     });
 
     expect(user).toEqual({ id: UUD_MOCK, email: EMAIL_MOCK });
+
+    expect(createUserWithEmailAndPassword).toHaveBeenCalled();
+    expect(createUserWithEmailAndPassword).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return a value from create', async () => {
+    (sendPasswordResetEmail as jest.Mock).mockResolvedValue(Promise.resolve());
+
+    const user = await service.resetPassword(EMAIL_MOCK);
+
+    expect(user).toBeUndefined();
 
     expect(createUserWithEmailAndPassword).toHaveBeenCalled();
     expect(createUserWithEmailAndPassword).toHaveBeenCalledTimes(1);

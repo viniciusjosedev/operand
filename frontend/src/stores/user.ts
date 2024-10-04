@@ -41,21 +41,14 @@ export const useUserStore = defineStore('user', () => {
 		}
 	};
 
-	const fetchTask = async (pageNumber: string) => {
-		console.log({pageNumber});
-		
-		const { data } = await api.get<{tasks: Task[], hasMore: boolean}>('/task', {
-			params: {
-				pageNumber,
-			}
+
+	const forgot = async (email: string) => {
+		await api.post('/auth/forgot', {
+			email,
 		});
-		
-		if (pageNumber === '1')	tasks.value = data.tasks;
-		else tasks.value = [...tasks.value, ...data.tasks];
-		hasMore.value = data.hasMore;
 	}
 
-  return { user, fetchUser, isAuthenticatedChecked, logout, fetchTask, tasks, hasMore }
+  return { user, fetchUser, isAuthenticatedChecked, logout, forgot, tasks, hasMore }
 })
 
 

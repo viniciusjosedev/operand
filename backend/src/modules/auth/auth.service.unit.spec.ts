@@ -71,4 +71,14 @@ describe('AuthService', () => {
     expect(userServiceSpy).toHaveBeenCalled();
     expect(userServiceSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('should return a value from forgot', async () => {
+    const userServiceSpy = jest
+      .spyOn(userService, 'resetPassword')
+      .mockImplementation(() => Promise.resolve());
+
+    expect(await service.forgot(EMAIL_MOCK)).toBeUndefined();
+    expect(userServiceSpy).toHaveBeenCalled();
+    expect(userServiceSpy).toHaveBeenCalledTimes(1);
+  });
 });

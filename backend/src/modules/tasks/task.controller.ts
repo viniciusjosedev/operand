@@ -36,8 +36,6 @@ export class TaskController {
     )
     query: TaskQueryGetDto,
   ) {
-    console.log({ query });
-
     const tasks = await this.taskService.findAll({
       id: req.user.id,
       pageNumber: query.pageNumber,

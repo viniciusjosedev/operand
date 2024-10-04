@@ -31,4 +31,8 @@ export class AuthService {
   async signUp(email: string, password: string): Promise<void> {
     await this.userService.create({ email, password });
   }
+
+  async forgot(email: string): Promise<void> {
+    await this.userService.resetPassword(email);
+  }
 }

@@ -31,14 +31,19 @@ const submit = async () => {
 		await api.post('/auth/signin', data);
 
 		await userStore.fetchUser();
-		toast.add({severity:'success', summary:'Sucesso', detail:'Login efetuado com sucesso'});
+		toast.add({severity:'success', summary:'Sucesso', detail:'Login efetuado com sucesso', life: 3000});
 		router.push('/tasks');
-	} else {
+	} else if (tab.value === 'signup') {
 		await api.post('/auth/signup', data);
-		toast.add({severity:'success', summary:'Sucesso', detail:'Cadastro efetuado com sucesso'});
+		toast.add({severity:'success', summary:'Sucesso', detail:'Cadastro efetuado com sucesso', life: 3000});
 		tab.value = 'signin';
 		form.value.email = '';
 		form.value.password = '';
+	} else {
+		await userStore.forgot(formForgot.value.email);
+		toast.add({severity:'success', summary:'Sucesso', detail:'Email enviado com sucesso', life: 3000});
+		tab.value = 'signin';
+		formForgot.value.email = '';
 	}
 }
 

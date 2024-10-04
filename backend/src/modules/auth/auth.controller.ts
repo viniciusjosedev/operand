@@ -7,7 +7,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthBodyDtoSignIn } from './auth.body.dto';
+import { AuthBodyDtoForgot, AuthBodyDtoSignIn } from './auth.body.dto';
 import { Response } from 'express';
 
 @Controller('auth')
@@ -55,5 +55,22 @@ export class AuthController {
     body: AuthBodyDtoSignIn,
   ) {
     return this.authService.signUp(body.email, body.password);
+  }
+
+  @Post('/forgot')
+  @HttpCode(200)
+  async forgot(
+    @Body(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        forbidNonWhitelisted: true,
+      }),
+    )
+    body: AuthBodyDtoForgot,
+  ) {
+    await this.authService.forgot(body.email);
+
+    return;
   }
 }

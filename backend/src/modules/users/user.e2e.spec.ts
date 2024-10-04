@@ -2,10 +2,13 @@ import 'dotenv/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AuthModule } from './auth.module';
 import { deleteUser, signInWithEmailAndPassword, User } from 'firebase/auth';
 import { AuthFirebase } from 'src/firebase/auth.firebase';
 import { EMAIL_MOCK, PASSWORD_MOCK } from './mocks';
+import { UserController } from './user.controller';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from './user.service';
+import * as cookieParser from 'cookie-parser';
 
 type Credentials = {
   email: string;
@@ -17,9 +20,10 @@ type AuthFunctionsHelper = {
   deleteUser: ({ email, password }: Credentials) => Promise<void>;
 };
 
-describe('AuthRouter (e2e)', () => {
+describe('UserRouter (e2e)', () => {
   let app: INestApplication = null;
   const authFirebase: AuthFirebase = new AuthFirebase();
+  let token: string;
 
   const authFunctionsHelper: AuthFunctionsHelper = {
     findUser: async function ({ email, password }) {
@@ -49,13 +53,26 @@ describe('AuthRouter (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AuthModule],
-      controllers: [],
-      providers: [],
+      controllers: [UserController],
+      providers: [UserService, AuthFirebase, JwtService],
+      exports: [UserService],
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
+    app.use(cookieParser());
+
     await app.init();
+
+    const jwtService = app.get<JwtService>(JwtService);
+
+    const payload = { email: EMAIL_MOCK, id: '1' };
+
+    token = jwtService.sign(payload, {
+      algorithm: 'HS256',
+      secret: process.env.JWT_SECRET || 'secret',
+      expiresIn: '30d',
+    });
   });
 
   afterAll(async () => {
@@ -73,46 +90,37 @@ describe('AuthRouter (e2e)', () => {
     });
   });
 
-  it('POST /auth/signup', async () => {
+  it('POST /user/me', async () => {
     const response = await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send({
-        email: EMAIL_MOCK,
-        password: PASSWORD_MOCK,
-      });
-
-    expect(response.status).toBe(201);
-    expect(response.body).toEqual({});
-  });
-
-  it('POST /auth/signin', async () => {
-    await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send({ email: EMAIL_MOCK, password: PASSWORD_MOCK });
-
-    const response = await request(app.getHttpServer())
-      .post('/auth/signin')
-      .send({
-        email: EMAIL_MOCK,
-        password: PASSWORD_MOCK,
-      });
+      .get('/user/me')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('access_token');
+    expect(response.body).toEqual({
+      email: EMAIL_MOCK,
+    });
   });
 
-  it('POST /auth/forgot', async () => {
-    await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send({ email: EMAIL_MOCK, password: PASSWORD_MOCK });
-
+  it('POST /user/logout', async () => {
     const response = await request(app.getHttpServer())
-      .post('/auth/forgot')
-      .send({
-        email: EMAIL_MOCK,
-      });
+      .post('/user/logout')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({});
+  });
+
+  it('POST /user/logout without token', async () => {
+    const response = await request(app.getHttpServer()).post('/user/logout');
+
+    expect(response.status).toBe(401);
+  });
+
+  it('POST /user/logout with invalid token', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/user/logout')
+      .set('Authorization', 'Bearer invalid_token');
+
+    expect(response.status).toBe(401);
   });
 });

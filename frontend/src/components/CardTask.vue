@@ -9,8 +9,6 @@ const props = defineProps({
   status: String,
 });
 
-console.log({task});
-
 const moveName = computed(() => {
   if (props.status === 'pending') return {
     movOne: 'in progress',

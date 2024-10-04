@@ -8,3 +8,8 @@ export class AuthBodyDtoSignIn {
   @Length(6)
   password: string;
 }
+
+export class AuthBodyDtoForgot {
+  @IsEmail()
+  email: string;
+}

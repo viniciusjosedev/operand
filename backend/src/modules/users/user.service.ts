@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { AuthFirebase } from 'src/firebase/auth.firebase';
@@ -50,6 +51,15 @@ export class UserService {
     } catch (err) {
       logger.error(err);
       throw new UnauthorizedException('User already exists');
+    }
+  }
+
+  async resetPassword(email: string): Promise<void> {
+    try {
+      await sendPasswordResetEmail(this.authFirebase.auth, email);
+    } catch (err) {
+      logger.error(err);
+      throw new UnauthorizedException('Error sending password reset email');
     }
   }
 }

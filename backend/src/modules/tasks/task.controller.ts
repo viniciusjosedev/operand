@@ -36,9 +36,12 @@ export class TaskController {
     )
     query: TaskQueryGetDto,
   ) {
+    console.log({ query });
+
     const tasks = await this.taskService.findAll({
       id: req.user.id,
       pageNumber: query.pageNumber,
+      status: query.status,
     });
 
     return tasks;
@@ -63,7 +66,7 @@ export class TaskController {
     return;
   }
 
-  @Put('/update')
+  @Put('/update/:taskId')
   @HttpCode(200)
   async update(
     @Req() req: Request,
@@ -73,10 +76,14 @@ export class TaskController {
       }),
     )
     body: TaskBodyUpdateDto,
+    @Param() param: { taskId: string },
   ) {
     const taskUpdate = await this.taskService.update({
       id: req.user.id,
-      task: body,
+      task: {
+        ...body,
+        id: param.taskId,
+      },
     });
 
     return taskUpdate;

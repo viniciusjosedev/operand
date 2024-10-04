@@ -144,11 +144,14 @@ describe('TaskRouter (e2e)', () => {
   it('/task (GET)', async () => {
     const response = await request(app.getHttpServer())
       .get('/task')
-      .query({ pageNumber: '1' })
+      .query({ pageNumber: '1', status: 'pending' })
       .set('Authorization', `Bearer ${accessToken}`);
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual([TASK_MOCK]);
+    expect(response.body).toEqual({
+      tasks: [TASK_MOCK],
+      hasMore: false,
+    });
   });
 
   it('/task/create (POST)', async () => {
@@ -165,7 +168,7 @@ describe('TaskRouter (e2e)', () => {
     const NEW_MOCK = { ...TASK_MOCK, title: 'new title' };
 
     const response = await request(app.getHttpServer())
-      .put('/task/update')
+      .put(`/task/update/${TASK_MOCK.id}`)
       .send(NEW_MOCK)
       .set('Authorization', `Bearer ${accessToken}`);
 

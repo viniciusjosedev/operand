@@ -17,18 +17,22 @@ export class TaskService implements TaskServiceInterface {
     return ref(this.databaseFirebase.database, `${this.DATABASE_PATH}/${id}`);
   }
 
-  parseTaskByPageNumber(tasks: Task[], pageNumber: number) {
+  parseTaskByPageNumber(tasks: Task[], pageNumber: number, status: string) {
+    const filteredTasks = tasks.filter((t) => t.status === status);
     const tasksPerPage = 40;
     const start = (pageNumber - 1) * tasksPerPage;
     const end = start + tasksPerPage;
-    return tasks.slice(start, end);
+    return {
+      tasks: filteredTasks.slice(start, end),
+      hasMore: filteredTasks.length > end,
+    };
   }
 
-  async findAll({ pageNumber, id }) {
+  async findAll({ pageNumber, id, status }) {
     const cachedTasks = await this.redisCache.get<Task[]>(id);
 
     if (cachedTasks) {
-      return this.parseTaskByPageNumber(cachedTasks, pageNumber);
+      return this.parseTaskByPageNumber(cachedTasks, pageNumber, status);
     }
 
     const snapshot = await get(this.generateDbRef(id));
@@ -36,10 +40,10 @@ export class TaskService implements TaskServiceInterface {
     if (snapshot.exists()) {
       const tasks: Task[] = snapshot.val();
       this.redisCache.set(id, tasks);
-      return this.parseTaskByPageNumber(tasks, pageNumber);
+      return this.parseTaskByPageNumber(tasks, pageNumber, status);
     }
 
-    return [];
+    return { tasks: [], hasMore: false };
   }
 
   generateUuid() {
@@ -68,7 +72,7 @@ export class TaskService implements TaskServiceInterface {
     return newTask;
   }
 
-  async update({ id, task }: { id: string; task: Task }) {
+  async update({ id, task }) {
     let tasks = await this.redisCache.get<Task[]>(id);
 
     if (!tasks) {
@@ -83,9 +87,12 @@ export class TaskService implements TaskServiceInterface {
       return null;
     }
 
-    tasks[taskIndex] = task;
+    tasks[taskIndex] = {
+      ...tasks[taskIndex],
+      ...task,
+    };
     await set(this.generateDbRef(id), tasks);
-    this.redisCache.set(id, tasks);
+    await this.redisCache.set(id, tasks);
 
     return task;
   }

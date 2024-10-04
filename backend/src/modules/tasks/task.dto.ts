@@ -5,6 +5,10 @@ export class TaskQueryGetDto {
   @IsString()
   @IsNotEmpty()
   pageNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
+  status: 'pending' | 'done' | 'in progress';
 }
 
 export class TaskBodyCreateDto {
@@ -21,11 +25,7 @@ export class TaskBodyCreateDto {
   status: 'pending' | 'done' | 'in progress';
 }
 
-export class TaskBodyUpdateDto implements Task {
-  @IsString()
-  @IsNotEmpty()
-  id: string;
-
+export class TaskBodyUpdateDto implements Omit<Task, 'createdAt' | 'id'> {
   @IsString()
   @IsNotEmpty()
   title: string;
@@ -37,8 +37,4 @@ export class TaskBodyUpdateDto implements Task {
   @IsString()
   @IsNotEmpty()
   status: 'pending' | 'done' | 'in progress';
-
-  @IsString()
-  @IsNotEmpty()
-  createdAt: string;
 }

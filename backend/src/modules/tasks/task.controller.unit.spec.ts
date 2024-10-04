@@ -45,7 +45,12 @@ describe('TaskController', () => {
   it('should return a value from index', async () => {
     const taskServiceSpy = jest
       .spyOn(taskService, 'findAll')
-      .mockImplementation(() => Promise.resolve([]));
+      .mockImplementation(() =>
+        Promise.resolve({
+          tasks: [TASK_MOCK],
+          hasMore: false,
+        }),
+      );
 
     expect(
       await controller.index(
@@ -54,9 +59,13 @@ describe('TaskController', () => {
         } as unknown as Request,
         {
           pageNumber: '1',
+          status: 'pending',
         },
       ),
-    ).toEqual([]);
+    ).toEqual({
+      tasks: [TASK_MOCK],
+      hasMore: false,
+    });
 
     expect(taskServiceSpy).toHaveBeenCalled();
     expect(taskServiceSpy).toHaveBeenCalledTimes(1);
@@ -95,11 +104,12 @@ describe('TaskController', () => {
           user: { id: '1' },
         } as unknown as Request,
         {
-          id: '1',
           title: 'title',
           description: 'description',
           status: 'pending',
-          createdAt: new Date().toISOString(),
+        },
+        {
+          taskId: TASK_MOCK.id,
         },
       ),
     ).toEqual(TASK_MOCK);

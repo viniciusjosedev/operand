@@ -7,11 +7,18 @@ export type Task = {
 };
 
 export interface TaskServiceInterface {
-  findAll(data: { pageNumber: string; id: string }): Promise<Task[]>;
+  findAll(data: {
+    pageNumber: string;
+    id: string;
+    status: 'pending' | 'done' | 'in progress';
+  }): Promise<{ tasks: Task[]; hasMore: boolean }>;
   create(data: {
     task: Omit<Task, 'id' | 'createdAt'>;
     id: string;
   }): Promise<Task>;
-  update(data: { id: string; task: Task }): Promise<Task | null>;
+  update(data: {
+    id: string;
+    task: Omit<Task, 'createdAt'>;
+  }): Promise<Task | null>;
   delete(data: { id: string; taskId: string }): Promise<void>;
 }

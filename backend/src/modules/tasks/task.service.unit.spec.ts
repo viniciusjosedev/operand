@@ -64,7 +64,12 @@ describe('TaskService', () => {
       val: jest.fn().mockReturnValue([]),
     });
 
-    expect(await service.findAll({ pageNumber: 1, id: '1' })).toEqual([]);
+    expect(
+      await service.findAll({ pageNumber: 1, id: '1', status: 'pending' }),
+    ).toEqual({
+      tasks: [],
+      hasMore: false,
+    });
     expect(redisCacheSpy).toHaveBeenCalled();
     expect(redisCacheSpy).toHaveBeenCalledTimes(1);
   });
@@ -74,9 +79,12 @@ describe('TaskService', () => {
       .spyOn(redisCache, 'get')
       .mockImplementation(() => Promise.resolve([TASK_MOCK]));
 
-    expect(await service.findAll({ pageNumber: 1, id: '1' })).toEqual([
-      TASK_MOCK,
-    ]);
+    expect(
+      await service.findAll({ pageNumber: 1, id: '1', status: 'pending' }),
+    ).toEqual({
+      tasks: [TASK_MOCK],
+      hasMore: false,
+    });
     expect(redisCacheSpy).toHaveBeenCalled();
     expect(redisCacheSpy).toHaveBeenCalledTimes(1);
   });
@@ -91,7 +99,12 @@ describe('TaskService', () => {
       val: jest.fn().mockReturnValue([]),
     });
 
-    expect(await service.findAll({ pageNumber: 1, id: '1' })).toEqual([]);
+    expect(
+      await service.findAll({ pageNumber: 1, id: '1', status: 'pending' }),
+    ).toEqual({
+      tasks: [],
+      hasMore: false,
+    });
     expect(redisCacheSpy).toHaveBeenCalled();
     expect(redisCacheSpy).toHaveBeenCalledTimes(1);
   });

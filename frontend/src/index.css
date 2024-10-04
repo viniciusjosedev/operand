@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Personalizando a cor de fundo dos toasts */
+.p-toast {
+  background-color: #333; /* Cor de fundo padrão */
+  color: white; /* Cor do texto */
+}
+
+.p-toast-success {
+  background-color: #28a745; /* Cor verde para sucesso */
+  color: white;
+}
+
+.p-toast-info {
+  background-color: #17a2b8; /* Cor azul para info */
+  color: white;
+}
+
+.p-toast-warning {
+  background-color: #ffc107; /* Cor amarela para alerta */
+  color: black;
+}
+
+.p-toast-error {
+  background-color: #dc3545; /* Cor vermelha para erro */
+  color: white;
+}

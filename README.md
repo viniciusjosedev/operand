@@ -90,36 +90,27 @@ Para iniciar a aplicação com Docker, certifique-se de que o Docker está insta
 
 Para executar os testes de integração, siga estes passos:
 
-1. Crie o arquivo `.env.test` em `/backend` e coloque a variável de ambiente para prosseguir com os testes.
+1. COnfigure o arquivo `.env` em `/backend` o email de testes que deseja juntamente com a url do realtime  database (pode ser a mesma de produção).
 
     ```sh
-    DATABASE_URL=
+    # TEST 
+	# (CAN BE SAME AS FIREBASE_DATABASE_URL)
+	TEST_DATABASE_URL=https://operand-1a642-default-rtdb.firebaseio.com
+	# DEFAULT EMAIL FOR TESTING, BY DEFAULT VALUE IS test@operand.com. THIS EMAIL NOT CAN BE USED IN PRODUCTION BECAUSE ACCOUNT WILL DELETED BEFORE AND AFTER TEST.
+	TEST_EMAIL_MOCK=juninho@teste.com
     ```
 
-    É necessário que a URL seja a mesma que a URL de produção, mudando apenas o nome do banco de dados.
-
-    Se a URL na `.env` for:
-
-    ```sh
-    DATABASE_URL="mongodb://cs-skin-store-mongo:27017/skinStore?replicaSet=rs0&retryWrites=true&w=majority&directConnection=true"
-    ```
-
-    Então a URL na `.env.test` deverá apenas mudar o nome do banco, exemplo:
-
-    ```sh
-    DATABASE_URL="mongodb://cs-skin-store-mongo:27017/skinStoreTest?replicaSet=rs0&retryWrites=true&w=majority&directConnection=true"
-    ```
 
 2. **Entre no container do backend:**
 
     ```sh
-    docker exec -it cs-skin-store-app sh
+    docker exec -it operand-app sh
     ```
 
-3. **Execute os testes:**
+3. **Execute todos os testes:**
 
     ```sh
-    npm run test
+    npm run test:cov
     ```
 
 Certifique-se de que o container do backend está rodando corretamente antes de executar os testes.
